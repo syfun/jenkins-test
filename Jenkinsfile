@@ -23,8 +23,20 @@ pipeline {
   stages {
     stage('Get build parameters') {
       steps {
-        sh "echo $ref"
-        sh "ls"
+        script {
+            def build = -1
+            def tag = ''
+            if ($ref == '/refs/heads/dev') {
+                def tag = 'dev-latest'
+            } else if ($ref == '/refs/heads/release') {
+                def tag = 'release-latest'
+            } else if ($ref == '/refs/heads/bugfix') {
+                def tag = 'bugfix-latest'
+            } else if ($ref == '/refs/heads/hotfix') {
+                def tag = 'hotfix-latest'
+            }
+        }
+        echo 'Build dcr.teletraan.io/seely/backend:$tag'
       }
     }
   }
