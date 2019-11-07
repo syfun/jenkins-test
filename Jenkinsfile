@@ -27,16 +27,18 @@ pipeline {
             def build = -1
             def tag = ''
             if ($ref == '/refs/heads/dev') {
-                def tag = 'dev-latest'
+                tag = 'dev-latest'
             } else if ($ref == '/refs/heads/release') {
-                def tag = 'release-latest'
+                tag = 'release-latest'
             } else if ($ref == '/refs/heads/bugfix') {
-                def tag = 'bugfix-latest'
+                tag = 'bugfix-latest'
             } else if ($ref == '/refs/heads/hotfix') {
-                def tag = 'hotfix-latest'
+                tag = 'hotfix-latest'
+            } else if ($ref == '/refs/tags/hotfix') {
+                build = 1
             }
         }
-        echo 'Build dcr.teletraan.io/seely/backend:$tag'
+        echo 'Build dcr.teletraan.io/seely/backend:$tag, and build $build'
       }
     }
   }
