@@ -39,9 +39,7 @@ pipeline {
       steps {
         script {
           branch = ref.split('/')[2]
-          sh 'printenv'
-          sh 'echo ${branch}'
-          sh 'git checkout ${branch}'
+          sh "git checkout ${branch}" // must double quotes
           dockerImage = docker.build(image + ':' + getImageTag(branch))
         }
       }
@@ -53,7 +51,7 @@ pipeline {
       steps {
         script {
           branch = ref.split('/')[2]
-          sh 'git checkout ${branch}'
+          sh "git checkout ${branch}" // must double quotes
           dockerImage = docker.build(image + ':' + getImageTag(branch), '--build-arg compile=1')
         }
       }
@@ -65,7 +63,7 @@ pipeline {
       steps {
         script {
           tag = ref.split('/')[2]
-          sh 'git checkout -b ${tag} ${tag}'
+          sh "git checkout -b ${tag} ${tag}" // must double quotes
           dockerImage = docker.build(image + ':' + tag, '--build-arg compile=1')
         }
       }
@@ -91,6 +89,6 @@ def getImageTag(branch) {
   } else if (branch.startsWith('bugfix')) {
     return 'release-latest'
   } else if (branch.startsWith('hotfix')) {
-    return 'release-latest'
+    return 'hotfix-latest'
   }
 }
