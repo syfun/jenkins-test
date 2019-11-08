@@ -52,6 +52,8 @@ pipeline {
       }
       steps {
         script {
+          tag = env.GIT_BRANCH.split('/')[1] + "-latest"
+          sh "echo $tag"
           dockerImage = docker.build(image + ":" + env.GIT_BRANCH.split('/')[1] + "-latest")
         }
       }
