@@ -23,22 +23,24 @@ pipeline {
   stages {
     stage('Get build parameters') {
       steps {
-        script {
-            def build = -1
-            def tag = ''
-            if ($ref == '/refs/heads/dev') {
-                tag = 'dev-latest'
-            } else if ($ref == '/refs/heads/release') {
-                tag = 'release-latest'
-            } else if ($ref == '/refs/heads/bugfix') {
-                tag = 'bugfix-latest'
-            } else if ($ref == '/refs/heads/hotfix') {
-                tag = 'hotfix-latest'
-            } else if ($ref == '/refs/tags/hotfix') {
-                build = 1
-            }
-        }
-        echo 'Build dcr.teletraan.io/seely/backend:$tag, and build $build'
+        echo env.BRANCH_NAME
+        sh "printenv"
+        // script {
+        //     def build = -1
+        //     def tag = ''
+        //     if ($ref == '/refs/heads/dev') {
+        //         tag = 'dev-latest'
+        //     } else if ($ref == '/refs/heads/release') {
+        //         tag = 'release-latest'
+        //     } else if ($ref == '/refs/heads/bugfix') {
+        //         tag = 'bugfix-latest'
+        //     } else if ($ref == '/refs/heads/hotfix') {
+        //         tag = 'hotfix-latest'
+        //     } else if ($ref == '/refs/tags/hotfix') {
+        //         build = 1
+        //     }
+        // }
+        // echo 'Build dcr.teletraan.io/seely/backend:$tag, and build $build'
       }
     }
   }
