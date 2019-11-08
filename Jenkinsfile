@@ -29,8 +29,8 @@ pipeline {
     stage('Simple build') {
       when {
           anyOf {
-              environment name: 'GIT_BRANCH', value: 'dev'
-              environment name: 'GIT_BRANCH', value: 'master'
+              environment name: 'GIT_BRANCH', value: 'origin/dev'
+              environment name: 'GIT_BRANCH', value: 'origin/master'
           }
       }
       steps {
