@@ -39,6 +39,8 @@ pipeline {
       steps {
         script {
           branch = ref.split('/')[2]
+          sh 'printenv'
+          sh 'echo ${branch}'
           sh 'git checkout ${branch}'
           dockerImage = docker.build(image + ':' + getImageTag(branch))
         }
