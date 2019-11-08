@@ -39,7 +39,7 @@ pipeline {
       steps {
         script {
           branch = ref.split('/')[2]
-          sh "git checkout ${branch}" // must double quotes
+          // sh "git checkout ${branch}" // must double quotes
           dockerImage = docker.build(image + ':' + getImageTag(branch))
         }
       }
@@ -51,7 +51,7 @@ pipeline {
       steps {
         script {
           branch = ref.split('/')[2]
-          sh "git checkout ${branch}" // must double quotes
+          // sh "git checkout ${branch}" // must double quotes
           dockerImage = docker.build(image + ':' + getImageTag(branch), '--build-arg compile=1', './')
         }
       }
@@ -63,6 +63,7 @@ pipeline {
       steps {
         script {
           tag = ref.split('/')[2]
+          sh "git pull -p"
           sh "git checkout -b ${tag} ${tag}" // must double quotes
           dockerImage = docker.build(image + ':' + tag, '--build-arg compile=1', './')
         }
