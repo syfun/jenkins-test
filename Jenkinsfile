@@ -21,7 +21,7 @@ pipeline {
     )
   }
   stages {
-    stage('Get build parameters') {
+    stage('Buid dev') {
       when {
           branch 'dev'
       }
@@ -47,7 +47,7 @@ pipeline {
         // echo 'Build dcr.teletraan.io/seely/backend:$tag, and build $build'
       }
     }
-    stage('Get build parameters') {
+    stage('Build master') {
       when {
           branch 'master'
       }
