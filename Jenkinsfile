@@ -19,7 +19,7 @@ pipeline {
      silentResponse: false,
     
      regexpFilterText: '$ref',
-     regexpFilterExpression: '^(refs/heads/(dev|master))$'
+     regexpFilterExpression: '^((refs/heads/(dev|hotfix|bugfix)|(refs/tags/.*)))$'
     )
   }
   environment {
@@ -44,13 +44,23 @@ pipeline {
         }
       }
     }
-    stage('Compile build') {
+    stage('Release build') {
       when {
-        expression { ref ==~ ref ==~ /refs\/heads\/(release)/ }
+        expression { ref ==~ /refs\/heads\/release/ }
       }
       steps {
         script {
           dockerImage = docker.build(image + ":" + env.GIT_BRANCH.split('/')[1] + "-latest")
+        }
+      }
+    }
+    stage('Tag build') {
+      when {
+        expression { ref ==~ /refs\/tags\/.*/ }
+      }
+      steps {
+        script {
+          dockerImage = docker.build(image + ":" + env.GIT_BRANCH.split('/')[2])
         }
       }
     }
