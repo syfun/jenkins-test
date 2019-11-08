@@ -1,15 +1,3 @@
-def getImageTag(branch) {
-  if (branch.startsWith("dev")) {
-    return "dev-latest"
-  } else if (branch.startsWith("release")) {
-    return "release-latest"
-  } else if (branch.startsWith("hotfix")) {
-    return "hotfix-latest"
-  } else if (branch.startsWith("bugfix")) {
-    return "bugfix-latest"
-  }
-}
-
 pipeline {
   agent any
   triggers {
