@@ -34,7 +34,7 @@ pipeline {
     }
     stage('Simple build') {
       when {
-        expression { ref ==~ /refs\/heads\/(dev|hotfix|bugfix).*/ }
+        expression { ref ==~ /refs\/heads\/(release|hotfix|bugfix).*/ }
       }
       steps {
         script {
@@ -46,7 +46,7 @@ pipeline {
     }
     stage('Release build') {
       when {
-        expression { ref ==~ /refs\/heads\/release.*/ }
+        expression { ref ==~ /refs\/heads\/dev.*/ }
       }
       steps {
         script {
