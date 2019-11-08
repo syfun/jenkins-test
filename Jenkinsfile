@@ -19,7 +19,7 @@ pipeline {
      silentResponse: false,
     
      regexpFilterText: '$ref',
-     regexpFilterExpression: '^(refs/heads/(dev|hotfix|bugfix)|refs/tags/.*)$'
+     regexpFilterExpression: '^(refs/heads/(dev|hotfix|bugfix).*|refs/tags/.*)$'
     )
   }
   environment {
@@ -36,7 +36,7 @@ pipeline {
     }
     stage('Simple build') {
       when {
-        expression { ref ==~ /refs\/heads\/(dev|hotfix|bugfix)/ }
+        expression { ref ==~ /refs\/heads\/(dev|hotfix|bugfix).*/ }
       }
       steps {
         script {
@@ -46,7 +46,7 @@ pipeline {
     }
     stage('Release build') {
       when {
-        expression { ref ==~ /refs\/heads\/release/ }
+        expression { ref ==~ /refs\/heads\/release.*/ }
       }
       steps {
         script {
