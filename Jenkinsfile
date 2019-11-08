@@ -19,7 +19,7 @@ pipeline {
      silentResponse: false,
     
      regexpFilterText: '$ref',
-     regexpFilterExpression: '^((refs/heads/(dev|hotfix|bugfix)|(refs/tags/.*)))$'
+     regexpFilterExpression: '^(refs/heads/(dev|hotfix|bugfix)|refs/tags/.*)$'
     )
   }
   environment {
