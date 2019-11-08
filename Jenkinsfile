@@ -39,7 +39,7 @@ pipeline {
           anyOf {
               // environment name: 'GIT_BRANCH', value: 'origin/dev'
               // environment name: 'GIT_BRANCH', value: 'origin/master'
-              expression { $ref ==~ /(dev|hotfix|bugfix)/}
+              expression { ref ==~ /(dev|hotfix|bugfix)/}
           }
       }
       steps {
