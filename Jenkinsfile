@@ -68,7 +68,8 @@ pipeline {
         }
       }
       post {
-        always { 
+        always {
+          sh "git checkout dev" 
           sh "git branch -D ${tag}"
         }
       }
