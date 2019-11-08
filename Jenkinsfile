@@ -22,8 +22,12 @@ pipeline {
   }
   stages {
     stage('Get build parameters') {
+      when {
+          branch 'dev'
+      }
       steps {
-        echo env.BRANCH_NAME
+        sh "dev"
+        echo env.GIT_BRANCH
         sh "printenv"
         // script {
         //     def build = -1
@@ -41,6 +45,16 @@ pipeline {
         //     }
         // }
         // echo 'Build dcr.teletraan.io/seely/backend:$tag, and build $build'
+      }
+    }
+    stage('Get build parameters') {
+      when {
+          branch 'master'
+      }
+      steps {
+        echo "master"
+        echo env.GIT_BRANCH
+        sh "printenv"
       }
     }
   }
