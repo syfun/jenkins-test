@@ -21,9 +21,12 @@ pipeline {
     )
   }
   stages {
-    stage('Buid dev') {
+    stage('Simple build') {
       when {
-          branch 'dev'
+          anyOf {
+              environment name: 'GIT_BRANCH', value: 'dev'
+              environment name: 'GIT_BRANCH', value: 'master'
+          }
       }
       steps {
         sh "dev"
