@@ -27,6 +27,11 @@ pipeline {
     tag = ""
   }
   stages {
+    stage('Print env') {
+      steps {
+        sh 'printenv'
+      }
+    }
     stage('Simple build') {
       when {
           anyOf {
