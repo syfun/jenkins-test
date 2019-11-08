@@ -1,7 +1,7 @@
 imageTag = ""
 
 pipeline {
-  agent none
+  agent any
   triggers {
     GenericTrigger(
      genericVariables: [
