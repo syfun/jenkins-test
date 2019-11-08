@@ -30,6 +30,8 @@ pipeline {
     stage('Print env') {
       steps {
         sh 'printenv'
+        sh 'echo $ref'
+        sh 'echo $repo'
       }
     }
     stage('Simple build') {
@@ -43,7 +45,7 @@ pipeline {
         sh "printenv"
         script {
           imageTag = env.GIT_BRANCH.split('/')[1]
-          dockerImage = docker.build(registry + ":" + imageTag)
+          dockerImage = docker.build(image + ":" + imageTag)
         }
       }
     }
