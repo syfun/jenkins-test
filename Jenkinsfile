@@ -36,11 +36,7 @@ pipeline {
     }
     stage('Simple build') {
       when {
-          anyOf {
-              // environment name: 'GIT_BRANCH', value: 'origin/dev'
-              // environment name: 'GIT_BRANCH', value: 'origin/master'
-              expression { ref ==~ /refs\/heads\/(dev|hotfix|bugfix)/ }
-          }
+        expression { ref ==~ /refs\/heads\/(dev|hotfix|bugfix)/ }
       }
       steps {
         sh "printenv"
@@ -56,8 +52,7 @@ pipeline {
       }
       steps {
         script {
-          imageTag = env.GIT_BRANCH.split('/')[1] + "-latest"
-          dockerImage = docker.build(image + ":" + imageTag)
+          dockerImage = docker.build(image + ":" + env.GIT_BRANCH.split('/')[1] + "-latest")
         }
       }
     }
