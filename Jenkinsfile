@@ -67,6 +67,11 @@ pipeline {
           dockerImage = docker.build(image + ':' + tag, '--build-arg compile=1', './')
         }
       }
+      post {
+        always { 
+          sh "git branch -D ${tag}"
+        }
+      }
     }
     stage('Deploy image') {
       when {
