@@ -1,5 +1,7 @@
+imageTag = ""
+
 pipeline {
-  agent any
+  agent none
   triggers {
     GenericTrigger(
      genericVariables: [
@@ -20,12 +22,11 @@ pipeline {
      regexpFilterExpression: '^(refs/heads/(dev|master))$'
     )
   }
+  environment {
+    image = "dcr.teletraan.io/public/jenkins-test"
+    tag = ""
+  }
   stages {
-    stage('Print env') {
-      steps {
-        sh "printenv"
-      }
-    }
     stage('Simple build') {
       when {
           anyOf {
@@ -34,35 +35,18 @@ pipeline {
           }
       }
       steps {
-        sh "dev"
-        echo env.GIT_BRANCH
         sh "printenv"
-        // script {
-        //     def build = -1
-        //     def tag = ''
-        //     if ($ref == '/refs/heads/dev') {
-        //         tag = 'dev-latest'
-        //     } else if ($ref == '/refs/heads/release') {
-        //         tag = 'release-latest'
-        //     } else if ($ref == '/refs/heads/bugfix') {
-        //         tag = 'bugfix-latest'
-        //     } else if ($ref == '/refs/heads/hotfix') {
-        //         tag = 'hotfix-latest'
-        //     } else if ($ref == '/refs/tags/hotfix') {
-        //         build = 1
-        //     }
-        // }
-        // echo 'Build dcr.teletraan.io/seely/backend:$tag, and build $build'
+        script {
+          imageTag = env.GIT_BRANCH.split('/')[1]
+          dockerImage = docker.build(registry + ":" + imageTag)
+        }
       }
     }
-    stage('Build master') {
-      when {
-          branch 'master'
-      }
+    stage('Deploy image') {
       steps {
-        echo "master"
-        echo env.GIT_BRANCH
-        sh "printenv"
+        script {
+          dockerImage.push()
+        }
       }
     }
   }
