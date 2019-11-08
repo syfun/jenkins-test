@@ -52,21 +52,19 @@ pipeline {
     }
     stage('Compile build') {
       when {
-          anyOf {
-              // environment name: 'GIT_BRANCH', value: 'origin/dev'
-              // environment name: 'GIT_BRANCH', value: 'origin/master'
-              expression { ref ==~ ref ==~ /refs\/heads\/(master|release)/ }
-          }
+        expression { ref ==~ ref ==~ /refs\/heads\/(release)/ }
       }
       steps {
-        sh "printenv"
         script {
-          imageTag = env.GIT_BRANCH.split('/')[1]
+          imageTag = env.GIT_BRANCH.split('/')[1] + "-latest"
           dockerImage = docker.build(image + ":" + imageTag)
         }
       }
     }
     stage('Deploy image') {
+      when {
+        expression { dockerImage }
+      }
       steps {
         script {
           dockerImage.push()
