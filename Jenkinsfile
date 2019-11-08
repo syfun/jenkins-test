@@ -1,15 +1,25 @@
-imageTag = ""
+def getImageTag(branch) {
+  if (branch.startsWith("dev")) {
+    return "dev-latest"
+  } else if (branch.startsWith("release")) {
+    return "release-latest"
+  } else if (branch.startsWith("hotfix")) {
+    return "hotfix-latest"
+  } else if (branch.startsWith("bugfix")) {
+    return "bugfix-latest"
+  }
+}
 
 pipeline {
   agent any
   triggers {
     GenericTrigger(
      genericVariables: [
-      [key: 'ref', value: '$.ref'],
-      [key: 'repo', value: '$.repository.full_name'],
+      [key: "ref", value: "$.ref"],
+      [key: "repo", value: "$.repository.full_name"],
      ],
      
-     causeString: 'Triggered on $ref',
+     causeString: "Triggered on $ref",
      
      token: env.JOB_NAME,
      
@@ -18,8 +28,8 @@ pipeline {
      
      silentResponse: false,
     
-     regexpFilterText: '$ref',
-     regexpFilterExpression: '^(refs/heads/(dev|hotfix|bugfix).*|refs/tags/.*)$'
+     regexpFilterText: "$ref",
+     regexpFilterExpression: "^(refs/heads/(dev|hotfix|bugfix).*|refs/tags/.*)$"
     )
   }
   environment {
@@ -27,44 +37,50 @@ pipeline {
     tag = ""
   }
   stages {
-    stage('Print env') {
+    stage("Print env") {
       steps {
-        sh 'printenv'
-        sh 'echo $ref'
-        sh 'echo $repo'
+        sh "printenv"
+        sh "echo $ref"
+        sh "echo $repo"
       }
     }
-    stage('Simple build') {
+    stage("Simple build") {
       when {
         expression { ref ==~ /refs\/heads\/(dev|hotfix|bugfix).*/ }
       }
       steps {
         script {
-          dockerImage = docker.build(image + ":" + env.GIT_BRANCH.split('/')[1] + "-latest")
+          branch = ref.split("/")[2]
+          sh "git checkout $branch"
+          dockerImage = docker.build(image + ":" + getImageTag(branch))
         }
       }
     }
-    stage('Release build') {
+    stage("Release build") {
       when {
         expression { ref ==~ /refs\/heads\/release.*/ }
       }
       steps {
         script {
-          dockerImage = docker.build(image + ":" + env.GIT_BRANCH.split('/')[1] + "-latest")
+          branch = ref.split("/")[2]
+          sh "git checkout $branch"
+          dockerImage = docker.build(image + ":" + getImageTag(branch), "--build-arg compile=1")
         }
       }
     }
-    stage('Tag build') {
+    stage("Tag build") {
       when {
         expression { ref ==~ /refs\/tags\/.*/ }
       }
       steps {
         script {
-          dockerImage = docker.build(image + ":" + env.GIT_BRANCH.split('/')[2])
+          tag = ref.split("/")[2]
+          sh "git checkout -b $tag $tag"
+          dockerImage = docker.build(image + ":" + tag, "--build-arg compile=1")
         }
       }
     }
-    stage('Deploy image') {
+    stage("Deploy image") {
       when {
         expression { dockerImage }
       }
