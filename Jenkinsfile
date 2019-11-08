@@ -63,6 +63,7 @@ pipeline {
       steps {
         script {
           tag = ref.split('/')[2]
+          sh 'ls'
           // sh "git pull -p"
           // sh "git checkout -b ${tag} ${tag}" // must double quotes
           dockerImage = docker.build(image + ':' + tag, '--build-arg compile=1', './')
